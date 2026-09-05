@@ -139,21 +139,23 @@ main .container > .project-detail__gallery-title:first-child {
   color: #ffffff;
 }
 
-.btn--primary:hover {
-  background: var(--color-accent-hover);
-  /*transform: translateY(-2px);*/
-  /*box-shadow: 0 6px 20px rgba(132, 189, 176, 0.35);*/
-}
-
 .btn--outline {
   background: transparent;
   color: var(--color-text);
   border-color: var(--color-border);
 }
 
-.btn--outline:hover {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+@media (hover: hover) and (pointer: fine) {
+  .btn--primary:hover {
+    background: var(--color-accent-hover);
+    /*transform: translateY(-2px);*/
+    /*box-shadow: 0 6px 20px rgba(132, 189, 176, 0.35);*/
+  }
+
+  .btn--outline:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
 }
 
 /* ── Tags ──────────────────────────────────────────────────── */
@@ -1494,6 +1496,28 @@ body.modal-open {
   .nav__link {
     display: block;
     padding: 1rem 1.25rem;
+  }
+
+  /* Seiten mit nur einem Menüpunkt (z. B. "Zurück") sollen ihn nicht
+     hinter dem Hamburger-Menü verstecken, sondern immer anzeigen. */
+  .nav__menu--static {
+    position: static;
+    flex-direction: row;
+    gap: 0;
+    background: none;
+    border-bottom: none;
+    padding: 0;
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .nav__menu--static li {
+    border-bottom: none;
+  }
+
+  .nav__menu--static .nav__link {
+    padding: 0.5rem 0;
   }
 
   .form-row {
