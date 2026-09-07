@@ -1326,14 +1326,14 @@ body.modal-open {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  overflow: hidden;
   box-shadow: var(--shadow);
 }
 
 .gallery-modal__close {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
   z-index: 3;
   display: flex;
   align-items: center;
@@ -1383,6 +1383,8 @@ body.modal-open {
   width: 100%;
   aspect-ratio: 16 / 9;
   background: #000;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
 }
 
 .gallery-modal__image {
