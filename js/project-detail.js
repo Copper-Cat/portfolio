@@ -5,6 +5,10 @@
   const galleries = document.querySelectorAll(".project-gallery");
   let videoModal = null;
   let videoIframe = null;
+  let videoPoster = null;
+  let videoPosterImage = null;
+  let videoPlayButton = null;
+  let activeVideo = null;
   let galleryModal = null;
   let galleryModalImage = null;
   let galleryImages = [];
@@ -86,6 +90,8 @@
 
     return {
       type: "youtube",
+      videoId: videoId,
+      sourceUrl: value,
       embedUrl: "https://www.youtube-nocookie.com/embed/" + videoId + "?" + params.toString()
     };
   }
@@ -134,6 +140,8 @@
 
     return {
       type: "vimeo",
+      videoId: videoId,
+      sourceUrl: value,
       embedUrl: "https://player.vimeo.com/video/" + videoId + "?" + params.toString()
     };
   }
@@ -281,12 +289,23 @@
       '<div class="video-modal__dialog">' +
         '<button type="button" class="video-modal__close" aria-label="Close trailer"></button>' +
         '<div class="video-modal__iframe-wrap">' +
-          '<iframe allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" title="Project trailer"></iframe>' +
+          '<div class="video-modal__poster" hidden>' +
+            '<img class="video-modal__poster-image" src="" alt="">' +
+            '<div class="video-modal__poster-overlay">' +
+              '<button type="button" class="video-modal__play" aria-label="Play video"></button>' +
+            '</div>' +
+          '</div>' +
+          '<iframe allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="Project trailer"></iframe>' +
         "</div>" +
       "</div>";
 
     document.body.appendChild(videoModal);
     videoIframe = videoModal.querySelector("iframe");
+    videoPoster = videoModal.querySelector(".video-modal__poster");
+    videoPosterImage = videoModal.querySelector(".video-modal__poster-image");
+    videoPlayButton = videoModal.querySelector(".video-modal__play");
+
+    videoPlayButton.addEventListener("click", loadActiveVideo);
 
     videoModal.querySelector(".video-modal__close").addEventListener("click", closeVideoModal);
     videoModal.querySelector("[data-close]").addEventListener("click", closeVideoModal);
@@ -515,14 +534,68 @@
     }
 
     ensureVideoModal();
-    videoIframe.src = video.embedUrl;
+
+    activeVideo = video;
+    videoIframe.src = "";
+    videoIframe.hidden = true;
+
+    videoPoster.hidden = false;
+    videoPosterImage.hidden = false;
+    videoPosterImage.removeAttribute("src");
+    videoPosterImage.alt = "Video preview";
+    videoPoster.classList.remove("video-modal__poster--loading");
+
+    // YouTube provides a lightweight thumbnail directly.
+    // Vimeo thumbnails are fetched from Vimeo's oEmbed endpoint in the background.
+    if (video.type === "youtube" && video.videoId) {
+      videoPosterImage.src = "https://i.ytimg.com/vi/" + video.videoId + "/hqdefault.jpg";
+      videoPosterImage.alt = "YouTube video preview";
+    } else if (video.type === "vimeo" && video.sourceUrl) {
+      videoPoster.classList.add("video-modal__poster--loading");
+      loadVimeoThumbnail(video.sourceUrl);
+    } else {
+      videoPoster.classList.add("video-modal__poster--loading");
+    }
+
     videoModal.hidden = false;
     document.body.classList.add("modal-open");
+  }
+
+  function loadActiveVideo() {
+    if (!activeVideo) return;
+
+    videoIframe.src = activeVideo.embedUrl;
+    videoIframe.hidden = false;
+    videoPoster.hidden = true;
+  }
+
+  function loadVimeoThumbnail(sourceUrl) {
+    fetch("https://vimeo.com/api/oembed.json?url=" + encodeURIComponent(sourceUrl))
+      .then(function (response) {
+        if (!response.ok) throw new Error("Vimeo oEmbed request failed");
+        return response.json();
+      })
+      .then(function (data) {
+        if (!activeVideo || activeVideo.sourceUrl !== sourceUrl || !data.thumbnail_url) return;
+        videoPosterImage.src = data.thumbnail_url;
+        videoPosterImage.alt = "Vimeo video preview";
+        videoPoster.classList.remove("video-modal__poster--loading");
+      })
+      .catch(function () {
+        // Keep the lightweight generic poster if Vimeo does not provide a thumbnail.
+        if (activeVideo && activeVideo.sourceUrl === sourceUrl) {
+          videoPoster.classList.remove("video-modal__poster--loading");
+        }
+      });
   }
 
   function closeVideoModal() {
     if (!videoModal) return;
     videoIframe.src = "";
+    videoIframe.hidden = true;
+    videoPoster.hidden = true;
+    videoPosterImage.removeAttribute("src");
+    activeVideo = null;
     videoModal.hidden = true;
     document.body.classList.remove("modal-open");
   }

@@ -1611,3 +1611,82 @@ body.modal-open {
     height: 36px;
   }
 }
+
+
+/* ── Fast video modal poster ───────────────────────────────── */
+.video-modal__poster {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+}
+
+.video-modal__poster[hidden] {
+  display: none;
+}
+
+.video-modal__poster-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-modal__poster-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.video-modal__play {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  transition: transform var(--transition), background var(--transition);
+}
+
+.video-modal__play::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 53%;
+  width: 0;
+  height: 0;
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+  border-left: 17px solid #fff;
+  transform: translate(-50%, -50%);
+}
+
+.video-modal__play:hover {
+  transform: scale(1.06);
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.video-modal__poster--loading::before {
+  content: "Video wird vorbereitet …";
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  z-index: 2;
+  padding: 0.4rem 0.7rem;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 0.8rem;
+  transform: translateX(-50%);
+}
+
+.video-modal__iframe-wrap {
+  position: relative;
+}
