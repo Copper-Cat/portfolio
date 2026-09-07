@@ -29,11 +29,6 @@
         ""
       ).trim();
 
-      if (isMobileViewport() && rawValue) {
-        window.open(rawValue, "_blank", "noopener,noreferrer");
-        return;
-      }
-
       openVideoModal(parseVideoUrl(rawValue));
     });
   });
