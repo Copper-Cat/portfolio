@@ -1570,9 +1570,25 @@ body.modal-open {
     touch-action: none;
   }
 
+  .gallery-modal__close {
+    width: 32px;
+    height: 32px;
+  }
+
+  .gallery-modal__close::before,
+  .gallery-modal__close::after {
+    width: 14px;
+  }
+
   .gallery-modal__btn {
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
+  }
+
+  .gallery-modal__btn--prev::before,
+  .gallery-modal__btn--next::before {
+    width: 8px;
+    height: 8px;
   }
 
   .gallery-modal__btn--prev {
