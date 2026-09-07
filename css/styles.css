@@ -139,10 +139,12 @@ main .container > .project-detail__gallery-title:first-child {
   color: #ffffff;
 }
 
-.btn--primary:hover {
-  background: var(--color-accent-hover);
-  /*transform: translateY(-2px);*/
-  /*box-shadow: 0 6px 20px rgba(132, 189, 176, 0.35);*/
+@media (hover: hover) {
+  .btn--primary:hover {
+    background: var(--color-accent-hover);
+    /*transform: translateY(-2px);*/
+    /*box-shadow: 0 6px 20px rgba(132, 189, 176, 0.35);*/
+  }
 }
 
 .btn--outline {
@@ -151,9 +153,11 @@ main .container > .project-detail__gallery-title:first-child {
   border-color: var(--color-border);
 }
 
-.btn--outline:hover {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+@media (hover: hover) {
+  .btn--outline:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
 }
 
 /* ── Tags ──────────────────────────────────────────────────── */
@@ -472,9 +476,11 @@ main .container > .project-detail__gallery-title:first-child {
   transition: all var(--transition);
 }
 
-.filter-btn:hover {
-  color: var(--color-text);
-  border-color: var(--color-text-muted);
+@media (hover: hover) {
+  .filter-btn:hover {
+    color: var(--color-text);
+    border-color: var(--color-text-muted);
+  }
 }
 
 .filter-btn.is-active {
@@ -796,9 +802,11 @@ main .container > .project-detail__gallery-title:first-child {
     pointer-events: auto;
   }
 
-  .back-to-top:hover {
-    color: var(--color-accent);
-    border-color: var(--color-accent);
+  @media (hover: hover) {
+    .back-to-top:hover {
+      color: var(--color-accent);
+      border-color: var(--color-accent);
+    }
   }
 
   .back-to-top::before {
@@ -895,10 +903,12 @@ main .container > .project-detail__gallery-title:first-child {
   transition: background var(--transition), border-color var(--transition), color var(--transition);
 }
 
-.hero-carousel__btn:hover {
-  background: rgba(42, 42, 42, 0.95);
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+@media (hover: hover) {
+  .hero-carousel__btn:hover {
+    background: rgba(42, 42, 42, 0.95);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
 }
 
 .hero-carousel__btn--prev::before,
@@ -1031,10 +1041,12 @@ body.modal-open {
   transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-.video-modal__close:hover {
-  color: var(--color-accent);
-  border-color: var(--color-accent);
-  background: rgba(42, 42, 42, 0.95);
+@media (hover: hover) {
+  .video-modal__close:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    background: rgba(42, 42, 42, 0.95);
+  }
 }
 
 .video-modal__iframe-wrap {
@@ -1220,9 +1232,11 @@ body.modal-open {
   transition: background var(--transition), border-color var(--transition), color var(--transition), opacity var(--transition);
 }
 
-.project-gallery__nav:hover:not(:disabled) {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+@media (hover: hover) {
+  .project-gallery__nav:hover:not(:disabled) {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
 }
 
 .project-gallery__nav:disabled {
@@ -1356,10 +1370,12 @@ body.modal-open {
   transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-.gallery-modal__close:hover {
-  color: var(--color-accent);
-  border-color: var(--color-accent);
-  background: rgba(42, 42, 42, 0.95);
+@media (hover: hover) {
+  .gallery-modal__close:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    background: rgba(42, 42, 42, 0.95);
+  }
 }
 
 .gallery-modal__viewport {
@@ -1399,10 +1415,12 @@ body.modal-open {
   transition: background var(--transition), border-color var(--transition), color var(--transition);
 }
 
-.gallery-modal__btn:hover {
-  background: rgba(42, 42, 42, 0.95);
-  border-color: var(--color-accent);
-  color: var(--color-accent);
+@media (hover: hover) {
+  .gallery-modal__btn:hover {
+    background: rgba(42, 42, 42, 0.95);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
 }
 
 .gallery-modal__btn--prev::before,
@@ -1494,6 +1512,26 @@ body.modal-open {
   .nav__link {
     display: block;
     padding: 1rem 1.25rem;
+  }
+
+  .nav__menu--static {
+    position: static;
+    flex-direction: row;
+    background: transparent;
+    border-bottom: none;
+    padding: 0;
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .nav__menu--static li {
+    border-bottom: none;
+  }
+
+  .nav__menu--static .nav__link {
+    display: inline;
+    padding: 0;
   }
 
   .form-row {
