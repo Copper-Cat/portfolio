@@ -1,4 +1,4 @@
 // Get your free access key at https://web3forms.com and paste it below.
 window.CONTACT_FORM_CONFIG = {
-  accessKey: "dc8c1fc0-925c-45ef-b90c-4ff0745f29ed"
+  accessKey: "a31a82e1-0a1d-46e0-b800-e765ead185d6"
 };
