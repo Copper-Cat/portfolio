@@ -130,27 +130,38 @@
     } catch (error) {}
   }
 
-  document.querySelectorAll("#projects a[href*='projects/']").forEach(function (link) {
-    link.addEventListener("click", saveIndexState);
-  });
+  document.addEventListener("click", function (e) {
+    const link = e.target.closest("a[href]");
+    if (!link) return;
+    const href = link.getAttribute("href") || "";
+    if (href.indexOf("projects/") === -1) return;
+    if (href.indexOf("index.html") !== -1) return;
+    saveIndexState();
+  }, true);
 
   function restoreIndexState() {
-    if (window.location.hash) {
-      try { sessionStorage.removeItem(INDEX_STATE_KEY); } catch (error) {}
-      return null;
-    }
-
     let data = null;
     try {
       const raw = sessionStorage.getItem(INDEX_STATE_KEY);
       if (!raw) return null;
-      sessionStorage.removeItem(INDEX_STATE_KEY);
       data = JSON.parse(raw);
     } catch (error) {
       return null;
     }
 
     if (!data || typeof data.scrollY !== "number") return null;
+
+    const hash = window.location.hash;
+    if (hash && hash !== "#top" && hash !== "#projects") {
+      try { sessionStorage.removeItem(INDEX_STATE_KEY); } catch (error) {}
+      return null;
+    }
+
+    try { sessionStorage.removeItem(INDEX_STATE_KEY); } catch (error) {}
+
+    if (hash === "#top" || hash === "#projects") {
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
 
     if (Array.isArray(data.filters)) {
       activeFilters.clear();
@@ -162,6 +173,7 @@
     }
 
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    document.documentElement.style.scrollBehavior = "auto";
     window.scrollTo(0, data.scrollY);
     return data.scrollY;
   }
@@ -289,6 +301,7 @@
 
   if (restoredScrollY !== null) {
     window.addEventListener("load", function () {
+      document.documentElement.style.scrollBehavior = "auto";
       window.scrollTo(0, restoredScrollY);
     });
   } else if (window.location.hash) {

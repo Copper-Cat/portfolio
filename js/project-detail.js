@@ -15,6 +15,12 @@
   let galleryAlts = [];
   let galleryIndex = 0;
 
+  document.querySelectorAll("a.nav__logo, .nav__menu a.nav__link").forEach(function (link) {
+    const href = link.getAttribute("href") || "";
+    if (href.indexOf("index.html") === -1) return;
+    link.setAttribute("href", "../index.html");
+  });
+
   carousels.forEach(function (carousel) {
     try {
       initCarousel(carousel);
