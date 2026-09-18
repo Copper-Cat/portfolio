@@ -135,7 +135,7 @@
 
     if (!videoId) return null;
 
-    const params = new URLSearchParams({ autoplay: "1", title: "0", byline: "0", portrait: "0" });
+    const params = new URLSearchParams({ autoplay: "1", api: "1", title: "0", byline: "0", portrait: "0" });
     if (privacyHash) params.set("h", privacyHash);
 
     return {
@@ -295,7 +295,7 @@
               '<button type="button" class="video-modal__play" aria-label="Play video"></button>' +
             '</div>' +
           '</div>' +
-          '<iframe allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="Project trailer"></iframe>' +
+          '<iframe allow="autoplay; fullscreen; clipboard-write; encrypted-media; web-share" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="Project trailer"></iframe>' +
         "</div>" +
       "</div>";
 
@@ -534,9 +534,9 @@
     }
 
     ensureVideoModal();
+    stopVideoPlayback();
 
     activeVideo = video;
-    videoIframe.src = "";
     videoIframe.hidden = true;
 
     videoPoster.hidden = false;
@@ -589,10 +589,41 @@
       });
   }
 
+  function createVideoIframe() {
+    const iframe = document.createElement("iframe");
+    iframe.allow = "autoplay; fullscreen; clipboard-write; encrypted-media; web-share";
+    iframe.setAttribute("allowfullscreen", "");
+    iframe.setAttribute("loading", "lazy");
+    iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+    iframe.title = "Project trailer";
+    iframe.hidden = true;
+    return iframe;
+  }
+
+  function stopVideoPlayback() {
+    if (!videoIframe) return;
+
+    try {
+      const win = videoIframe.contentWindow;
+      if (win) {
+        win.postMessage({ method: "pause" }, "*");
+        win.postMessage({ method: "unload" }, "*");
+        win.postMessage(JSON.stringify({ method: "pause" }), "*");
+        win.postMessage(JSON.stringify({ method: "unload" }), "*");
+        win.postMessage(JSON.stringify({ event: "command", func: "pauseVideo", args: [] }), "*");
+        win.postMessage(JSON.stringify({ event: "command", func: "stopVideo", args: [] }), "*");
+      }
+    } catch (error) {}
+
+    const wrap = videoIframe.parentNode;
+    const next = createVideoIframe();
+    if (wrap) wrap.replaceChild(next, videoIframe);
+    videoIframe = next;
+  }
+
   function closeVideoModal() {
     if (!videoModal) return;
-    videoIframe.src = "";
-    videoIframe.hidden = true;
+    stopVideoPlayback();
     videoPoster.hidden = true;
     videoPosterImage.removeAttribute("src");
     activeVideo = null;

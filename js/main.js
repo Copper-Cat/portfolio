@@ -119,6 +119,53 @@
 
   syncFilterButtons();
 
+  const INDEX_STATE_KEY = "portfolio-index-state";
+
+  function saveIndexState() {
+    try {
+      sessionStorage.setItem(INDEX_STATE_KEY, JSON.stringify({
+        scrollY: window.scrollY,
+        filters: Array.from(activeFilters)
+      }));
+    } catch (error) {}
+  }
+
+  document.querySelectorAll("#projects a[href*='projects/']").forEach(function (link) {
+    link.addEventListener("click", saveIndexState);
+  });
+
+  function restoreIndexState() {
+    if (window.location.hash) {
+      try { sessionStorage.removeItem(INDEX_STATE_KEY); } catch (error) {}
+      return null;
+    }
+
+    let data = null;
+    try {
+      const raw = sessionStorage.getItem(INDEX_STATE_KEY);
+      if (!raw) return null;
+      sessionStorage.removeItem(INDEX_STATE_KEY);
+      data = JSON.parse(raw);
+    } catch (error) {
+      return null;
+    }
+
+    if (!data || typeof data.scrollY !== "number") return null;
+
+    if (Array.isArray(data.filters)) {
+      activeFilters.clear();
+      data.filters.forEach(function (filter) {
+        if (filter) activeFilters.add(filter);
+      });
+      syncFilterButtons();
+      applyProjectFilters();
+    }
+
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    window.scrollTo(0, data.scrollY);
+    return data.scrollY;
+  }
+
   /* ── Contact form validation & submit ────────────────────── */
   if (contactForm) {
     const fields = [
@@ -237,8 +284,14 @@
     });
   }
 
-  /* ── Scroll to anchor on load (e.g. back from project page) ─ */
-  if (window.location.hash) {
+  /* ── Restore scroll after returning from a project page ─ */
+  const restoredScrollY = restoreIndexState();
+
+  if (restoredScrollY !== null) {
+    window.addEventListener("load", function () {
+      window.scrollTo(0, restoredScrollY);
+    });
+  } else if (window.location.hash) {
     const target = document.querySelector(window.location.hash);
     if (target) {
       requestAnimationFrame(function () {
@@ -246,6 +299,11 @@
       });
     }
   }
+
+  window.addEventListener("pageshow", function (e) {
+    if (!e.persisted) return;
+    try { sessionStorage.removeItem(INDEX_STATE_KEY); } catch (error) {}
+  });
 
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
