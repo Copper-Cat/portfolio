@@ -353,28 +353,25 @@ main .container > .project-detail__gallery-title:first-child {
 
 .about__content p {
   color: var(--color-text-muted);
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .about__skills {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  margin-top: 1.5rem;
+  margin-top: 0.1rem;
 }
 
-.about__skills li {
-  font-size: 0.9rem;
-  font-weight: 500;
+
+
+.about__skills ul {
+  list-style: disc;
+  padding-left: 1.25rem;
   color: var(--color-text-muted);
+  margin-bottom: 1rem;
 }
 
-.about__skills li:not(:last-child)::after {
-  content: "|";
-  margin: 0 0.65rem;
-  color: var(--color-border);
-  font-weight: 400;
-}
 
 .about__actions {
   display: flex;
